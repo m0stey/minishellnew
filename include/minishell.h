@@ -200,6 +200,7 @@ void		execute_pipe(t_pipe_node *node, t_shell *shell);
 void		run_external(t_cmd_node *cmd, t_shell *shell);
 char		*get_cmd_path(char *cmd, t_shell *shell);
 int			handle_redirections(t_list *redirs);
+void		handle_exec_error(char *path, char **env_array, int code);
 
 // --- BUILTINS ---
 void		builtin_echo(char **args, t_shell *shell);

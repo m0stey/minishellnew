@@ -12,30 +12,33 @@
 
 #include "minishell.h"
 
-static void	handle_error(char *path, char **env_array, int code)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(path, 2);
-	if (code == 126)
-		ft_putendl_fd(": Is a directory", 2);
-	else if (code == 127)
-	{
-		if (ft_strchr(path, '/'))
-			ft_putendl_fd(": No such file or directory", 2);
-		else
-			ft_putendl_fd(": command not found", 2);
-	}
-	if (env_array)
-		free_array(env_array);
-	exit(code);
-}
-
-static void	handle_child(t_cmd_node *cmd, t_shell *shell)
+static void	child_exec(t_cmd_node *cmd, t_shell *shell)
 {
 	char		**env;
 	char		*path;
 	struct stat	st;
 
+	env = convert_env_list_to_array(shell->env_list);
+	path = get_cmd_path(cmd->args[0], shell);
+	if (!path)
+		handle_exec_error(cmd->args[0], env, 127);
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		free(path);
+		handle_exec_error(cmd->args[0], env, 126);
+	}
+	execve(path, cmd->args, env);
+	ft_putstr_fd("minishell: ", 2);
+	perror(cmd->args[0]);
+	free(path);
+	free_array(env);
+	if (errno == EACCES)
+		exit(126);
+	exit(127);
+}
+
+static void	handle_child(t_cmd_node *cmd, t_shell *shell)
+{
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (!handle_redirections(cmd->redirs))
@@ -52,23 +55,7 @@ static void	handle_child(t_cmd_node *cmd, t_shell *shell)
 		exec_builtin(cmd, shell);
 		exit(shell->exit_code);
 	}
-	env = convert_env_list_to_array(shell->env_list);
-	path = get_cmd_path(cmd->args[0], shell);
-	if (!path)
-		handle_error(cmd->args[0], env, 127);
-	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
-	{
-		free(path);
-		handle_error(path, env, 126);
-	}
-	execve(path, cmd->args, env);
-	ft_putstr_fd("minishell: ", 2);
-	perror(cmd->args[0]);
-	free(path);
-	free_array(env);
-	if (errno == EACCES)
-		exit(126);
-	exit(127);
+	child_exec(cmd, shell);
 }
 
 // Forks a new process to run an external command.
@@ -94,45 +81,7 @@ void	run_external(t_cmd_node *cmd, t_shell *shell)
 		shell->exit_code = 128 + WTERMSIG(status);
 }
 
-// Checks if the command is a builtin.
-int	check_builtin(t_cmd_node *cmd)
-{
-	char	*c;
-
-	if (!cmd->args || !cmd->args[0])
-		return (0);
-	c = cmd->args[0];
-	if (!ft_strncmp(c, "echo", 5) || !ft_strncmp(c, "cd", 3)
-		|| !ft_strncmp(c, "pwd", 4) || !ft_strncmp(c, "export", 7)
-		|| !ft_strncmp(c, "unset", 6) || !ft_strncmp(c, "env", 4)
-		|| !ft_strncmp(c, "exit", 5))
-		return (1);
-	return (0);
-}
-
-void	exec_builtin(t_cmd_node *cmd, t_shell *shell)
-{
-	char	*c;
-
-	*c = cmd->args[0];
-	if (!ft_strncmp(c, "echo", 5))
-		builtin_echo(cmd->args, shell);
-	else if (!ft_strncmp(c, "cd", 3))
-		builtin_cd(cmd->args, shell);
-	else if (!ft_strncmp(c, "pwd", 4))
-		builtin_pwd(cmd->args, shell);
-	else if (!ft_strncmp(c, "export", 7))
-		builtin_export(cmd->args, shell);
-	else if (!ft_strncmp(c, "unset", 6))
-		builtin_unset(cmd->args, shell);
-	else if (!ft_strncmp(c, "env", 4))
-		builtin_env(cmd->args, shell);
-	else if (!ft_strncmp(c, "exit", 5))
-		builtin_exit(cmd->args, shell);
-}
-
 // Orchestrates the execution of a single command node.
-// Uses save/restore logic for builtins to avoid corrupting parent FDs.
 void	execute_cmd(t_cmd_node *cmd, t_shell *shell)
 {
 	int	original_stdin;
@@ -145,22 +94,16 @@ void	execute_cmd(t_cmd_node *cmd, t_shell *shell)
 		original_stdin = dup(STDIN_FILENO);
 		original_stdout = dup(STDOUT_FILENO);
 		if (handle_redirections(cmd->redirs))
-		{
 			exec_builtin(cmd, shell);
-		}
 		else
-		{
 			shell->exit_code = 1;
-		}
 		dup2(original_stdin, STDIN_FILENO);
 		dup2(original_stdout, STDOUT_FILENO);
 		close(original_stdin);
 		close(original_stdout);
 	}
 	else
-	{
 		run_external(cmd, shell);
-	}
 }
 
 // Main traversal function for the AST.
