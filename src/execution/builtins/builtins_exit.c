@@ -46,7 +46,7 @@ static void	cleanup_shell(t_shell *shell)
 // non-numeric args, and 'too many arguments' errors.
 void	builtin_exit(char **args, t_shell *shell)
 {
-	long long exit_code;
+	long long	exit_code;
 
 	ft_putendl_fd("exit", 2);
 	if (!args[1])

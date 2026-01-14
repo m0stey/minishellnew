@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static char	*get_expanded_value(char *str, int *i, t_list *env_l, int last_exit_code)
+static char	*get_expanded_value(char *str, int *i,
+	t_list *env_l, int last_exit_code)
 {
 	int		length;
 	char	*name;
@@ -61,7 +62,8 @@ char	*expand_heredoc_line(char *line, t_list *env_l, int last_exit_code)
 	{
 		if (line[i] == '$' && (ft_isalnum(line[i + 1])
 				|| line[i + 1] == '_' || line[i + 1] == '?'))
-			result = ft_append_str(result, get_expanded_value(line, &i, env_l, last_exit_code));
+			result = ft_append_str(result,
+					get_expanded_value(line, &i, env_l, last_exit_code));
 		else
 		{
 			result = ft_append_str(result, ft_substr(line, i, 1));

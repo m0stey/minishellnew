@@ -42,16 +42,15 @@ static int	apply_redir(t_redir *redir)
 // Iterates through list of redirections for current cmd
 // and applies them in order.
 // Returns 1 on success, 0 on failure
-int handle_redirections(t_list *redirs)
+int	handle_redirections(t_list *redirs)
 {
-	t_list *tmp;
-	t_redir *redir;
+	t_list	*tmp;
+	t_redir	*redir;
 
 	tmp = redirs;
 	while (tmp)
 	{
 		redir = (t_redir *)tmp->content;
-		//TODO implement helper
 		if (!apply_redir(redir))
 			return (0);
 		tmp = tmp->next;

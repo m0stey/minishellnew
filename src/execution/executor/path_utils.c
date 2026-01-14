@@ -11,58 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
-// Helper: Frees the split array used for PATH
-// static void	free_paths(char **paths)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!paths)
-// 		return ;
-// 	while (paths[i])
-// 	{
-// 		free(paths[i]);
-// 		i++;
-// 	}
-// 	free(paths);
-// }
-
-// Helper: Joins directory + "/" + command and checks access
-// static char	*try_path(char *dir, char *cmd)
-// {
-// 	char	*tmp;
-// 	char	*full_path;
-
-// 	tmp = ft_strjoin(dir, "/");
-// 	if (!tmp)
-// 		return (NULL);
-// 	full_path = ft_strjoin(tmp, cmd);
-// 	free(tmp);
-// 	if (!full_path)
-// 		return (NULL);
-// 	if (access(full_path, F_OK) == 0)
-// 		return (full_path);
-// 	free(full_path);
-// 	return (NULL);
-// }
-
-// Iterates through the split PATH to find the binary.
-// static char	*search_in_path(char *cmd, char **paths)
-// {
-// 	int		i;
-// 	char	*valid_path;
-
-// 	i = 0;
-// 	while (paths[i])
-// 	{
-// 		valid_path = try_path(paths[i], cmd);
-// 		if (valid_path)
-// 			return (valid_path);
-// 		i++;
-// 	}
-// 	return (NULL);
-// }
 
 // Main function to resolve command path
 // 1. Handle absolute or relative paths (e.g., /bin/ls or ./script.sh)

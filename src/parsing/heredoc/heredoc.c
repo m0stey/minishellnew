@@ -21,7 +21,7 @@ static char	*expand_delim_str(char *delim, t_list *env)
 		val = ft_getenv(env, delim + 1);
 		if (val)
 			return (ft_strdup(val));
-		return (ft_strdup("")); 
+		return (ft_strdup(""));
 	}
 	return (ft_strdup(delim));
 }

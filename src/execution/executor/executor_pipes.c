@@ -33,7 +33,7 @@ static void	exec_pipe_child(t_node *n, int p[2], t_shell *shell, int left)
 			exit(1);
 		close(p[1]);
 	}
-		else
+	else
 	{
 		close(p[1]);
 		if (dup2(p[0], STDIN_FILENO) == -1)
@@ -44,7 +44,8 @@ static void	exec_pipe_child(t_node *n, int p[2], t_shell *shell, int left)
 	exit(shell->exit_code);
 }
 
-static int	fork_children(t_pipe_node *node, int p[2], t_shell *shell, pid_t *pid)
+static int	fork_children(t_pipe_node *node,
+	int p[2], t_shell *shell, pid_t *pid)
 {
 	pid[0] = fork();
 	if (pid[0] == -1)
@@ -55,7 +56,6 @@ static int	fork_children(t_pipe_node *node, int p[2], t_shell *shell, pid_t *pid
 	}
 	if (pid[0] == 0)
 		exec_pipe_child(node->left, p, shell, 1);
-
 	pid[1] = fork();
 	if (pid[1] == -1)
 	{

@@ -29,7 +29,6 @@ static int	is_empty_cmd(t_node *node)
 	return (0);
 }
 
-
 t_node	*parser(t_list *tokens, t_shell *shell)
 {
 	t_list	*current;

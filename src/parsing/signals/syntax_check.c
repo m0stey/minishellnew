@@ -15,7 +15,6 @@
 static	int	is_redirection(t_token_type type);
 static int	check_token_rules(t_list *current, t_token *token);
 
-
 t_token	*get_content(t_list *node)
 {
 	if (!node)
@@ -79,7 +78,8 @@ static int	check_token_rules(t_list *current, t_token *token)
 	return (0);
 }
 
-int	process_redir_token(t_list **curr_raw, t_list **clean_tokens, t_list *env_l, int last_exit_code)
+int	process_redir_token(t_list **curr_raw, t_list **clean_tokens,
+	t_list *env_l, int last_exit_code)
 {
 	t_list	*current;
 	t_list	*expanded_file;

@@ -14,17 +14,17 @@
 
 void	free_redir(void *content)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = (t_redir *)content;
 	if (!redir)
 		return ;
 	if (redir->filename)
 	{
-
 		if (redir->type == REDIR_INPUT && access(redir->filename, F_OK) == 0)
 		{
-			if (ft_strnstr(redir->filename, "sh-thd-", ft_strlen(redir->filename)))
+			if (ft_strnstr(redir->filename, "sh-thd-",
+					ft_strlen(redir->filename)))
 				unlink(redir->filename);
 		}
 		free(redir->filename);

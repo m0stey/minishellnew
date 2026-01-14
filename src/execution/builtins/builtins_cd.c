@@ -35,9 +35,9 @@ static void	update_env_pwds(t_shell *shell, char *old_pwd)
 // Resolves the target directory path.
 // Returns $HOME if no arguments are provided,
 // otherwise returns the first argument.
-static char *get_target_path(char **args, t_shell *shell)
+static char	*get_target_path(char **args, t_shell *shell)
 {
-	char *path;
+	char	*path;
 
 	if (!args[1] || (ft_strncmp(args[1], "--", 3) == 0 && !args[2]))
 	{

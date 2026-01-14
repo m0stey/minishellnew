@@ -97,23 +97,24 @@ void	run_external(t_cmd_node *cmd, t_shell *shell)
 // Checks if the command is a builtin.
 int	check_builtin(t_cmd_node *cmd)
 {
-	char *c;
+	char	*c;
 
 	if (!cmd->args || !cmd->args[0])
 		return (0);
 	c = cmd->args[0];
-	if (!ft_strncmp(c, "echo", 5) || !ft_strncmp(c, "cd", 3) ||
-		!ft_strncmp(c, "pwd", 4) || !ft_strncmp(c, "export", 7) ||
-		!ft_strncmp(c, "unset", 6) || !ft_strncmp(c, "env", 4) ||
-		!ft_strncmp(c, "exit", 5))
+	if (!ft_strncmp(c, "echo", 5) || !ft_strncmp(c, "cd", 3)
+		|| !ft_strncmp(c, "pwd", 4) || !ft_strncmp(c, "export", 7)
+		|| !ft_strncmp(c, "unset", 6) || !ft_strncmp(c, "env", 4)
+		|| !ft_strncmp(c, "exit", 5))
 		return (1);
 	return (0);
 }
 
 void	exec_builtin(t_cmd_node *cmd, t_shell *shell)
 {
-	char *c = cmd->args[0];
+	char	*c;
 
+	*c = cmd->args[0];
 	if (!ft_strncmp(c, "echo", 5))
 		builtin_echo(cmd->args, shell);
 	else if (!ft_strncmp(c, "cd", 3))

@@ -27,7 +27,8 @@ int	get_var_name_length(char *str)
 	return (length);
 }
 
-t_list	*build_chunks(char *raw_val, t_list *env_l, int *unquoted, int expand, int last_exit_code)
+t_list	*build_chunks(char *raw_val, t_list *env_l,
+		int *unquoted, int expand, int last_exit_code)
 {
 	t_list	*chunk_list;
 	t_expd	data;
@@ -92,7 +93,8 @@ int	add_split_tokens(t_list **clean_tokens, char **split_words)
 	return (1);
 }
 
-int	handle_heredoc(t_list **clean_tokens, t_token *raw_token, int last_exit_code)
+int	handle_heredoc(t_list **clean_tokens,
+		t_token *raw_token, int last_exit_code)
 {
 	t_list	*chunk_list;
 	t_token	*last_token;
@@ -103,7 +105,8 @@ int	handle_heredoc(t_list **clean_tokens, t_token *raw_token, int last_exit_code
 	has_quotes = 0;
 	if (ft_strchr(raw_token->value, '\'') || ft_strchr(raw_token->value, '\"'))
 		has_quotes = 1;
-	chunk_list = build_chunks(raw_token->value, NULL, &is_unquoted, 0, last_exit_code);
+	chunk_list = build_chunks(
+			raw_token->value, NULL, &is_unquoted, 0, last_exit_code);
 	if (!chunk_list)
 		return (0);
 	delimiter = join_string_chunks(chunk_list);

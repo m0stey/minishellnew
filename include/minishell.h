@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -32,6 +31,9 @@
 
 // --- Libft ---
 # include "../libft/libft.h"
+
+// --- Paths ---
+# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
 
 // --- Macros ---
 # define WHITESPACE " \t\n\v\f\r"
@@ -209,8 +211,6 @@ void		builtin_env(char **args, t_shell *shell);
 void		builtin_exit(char **args, t_shell *shell);
 int			check_builtin(t_cmd_node *cmd);
 void		exec_builtin(t_cmd_node *cmd, t_shell *shell);
-
-
 
 // Builtin Utils
 int			is_valid_identifier(char *str);
