@@ -43,25 +43,18 @@ static char	*get_target_path(char **args, t_shell *shell)
 	{
 		path = ft_getenv(shell->env_list, "HOME");
 		if (!path)
-		{
 			ft_putendl_fd("minishell: cd: HOME not set", 2);
-			return (NULL);
-		}
 	}
 	else if (ft_strncmp(args[1], "-", 2) == 0)
 	{
 		path = ft_getenv(shell->env_list, "OLDPWD");
 		if (!path)
-		{
 			ft_putendl_fd("minishell: cd: OLDPWD not set", 2);
-			return (NULL);
-		}
-		ft_putendl_fd(path, 1);
+		else
+			ft_putendl_fd(path, 1);
 	}
 	else if (ft_strncmp(args[1], "--", 2) == 0)
-	{
 		path = args[2];
-	}
 	else
 		path = args[1];
 	return (path);
