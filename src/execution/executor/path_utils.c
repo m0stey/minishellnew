@@ -12,29 +12,11 @@
 
 #include "minishell.h"
 
-// Main function to resolve command path
-// 1. Handle absolute or relative paths (e.g., /bin/ls or ./script.sh)
-// 2. Get PATH variable
-// 3. Split PATH and search
-char	*get_cmd_path(char *cmd, t_shell *shell)
+static char	*search_in_paths(char *cmd, char **paths)
 {
-	char	**paths;
-	char	*path_env;
-	char	*full_path;
 	int		i;
+	char	*full_path;
 
-	if (ft_strchr(cmd, '/') || cmd[0] == '.')
-	{
-		if (access(cmd, F_OK) == 0)
-			return (ft_strdup(cmd));
-		return (NULL);
-	}
-	path_env = ft_getenv(shell->env_list, "PATH");
-	if (!path_env)
-		path_env = DEFAULT_PATH;
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
@@ -49,4 +31,25 @@ char	*get_cmd_path(char *cmd, t_shell *shell)
 	}
 	free_array(paths);
 	return (NULL);
+}
+
+// Main function to resolve command path
+char	*get_cmd_path(char *cmd, t_shell *shell)
+{
+	char	**paths;
+	char	*path_env;
+
+	if (ft_strchr(cmd, '/') || cmd[0] == '.')
+	{
+		if (access(cmd, F_OK) == 0)
+			return (ft_strdup(cmd));
+		return (NULL);
+	}
+	path_env = ft_getenv(shell->env_list, "PATH");
+	if (!path_env)
+		path_env = DEFAULT_PATH;
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	return (search_in_paths(cmd, paths));
 }
