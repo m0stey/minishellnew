@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+static int	print_redir_error(void)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+	return (0);
+}
+
 static	t_redir_type	get_redir_type(t_token_type token_type)
 {
 	if (token_type == TOKEN_APPEND)
@@ -50,10 +56,10 @@ int	handle_redirection(t_list **tokens, t_cmd_node *cmd)
 	op_token = (t_token *)(*tokens)->content;
 	*tokens = (*tokens)->next;
 	if (!*tokens)
-		return (ft_putstr_fd("minishell: syntax error near unexpected token\n", 2), 0);
+		return (print_redir_error());
 	filename = (t_token *)(*tokens)->content;
 	if (!filename || filename->type != TOKEN_WORD)
-		return (ft_putstr_fd("minishell: syntax error near unexpected token\n", 2), 0);
+		return (print_redir_error());
 	redir = create_redir_node(get_redir_type(op_token->type), filename->value);
 	if (!redir)
 		return (0);
