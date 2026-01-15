@@ -33,7 +33,7 @@
 # include "../libft/libft.h"
 
 // --- Paths ---
-# define DEFAULT_PATH "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+# define DEFAULT_PATH "/usr/local/bin:/usr/bin:/bin"
 
 // --- Macros ---
 # define WHITESPACE " \t\n\v\f\r"
@@ -138,12 +138,17 @@ void		free_token_list(t_list **tokens);
 void		print_token_list(t_list *tokens);
 
 // --- PARSING: Expander ---
-t_list		*expander(t_list *raw_tokens, t_list *env_list, int last_exit_code);
-int			process_tkn(t_list **current_raw, t_list **clean_tokens, t_list *env_l, int last_exit_code);
-int			word_expander(t_list **clean_tokens, char *raw_value, t_list *env_l, int last_exit_code);
+t_list		*expander(t_list *raw_tokens, t_list *env_list,
+				int last_exit_code);
+int			process_tkn(t_list **current_raw, t_list **clean_tokens,
+				t_list *env_l, int last_exit_code);
+int			word_expander(t_list **clean_tokens, char *raw_value,
+				t_list *env_l, int last_exit_code);
 int			clone_token(t_list **clean_tokens, t_token *raw_token);
-int			handle_heredoc(t_list **clean_tokens, t_token *raw_token, int last_exit_code);
-int			process_heredoc_token(t_list **current_raw, t_list **clean_tokens, int last_exit_code);
+int			handle_heredoc(t_list **clean_tokens, t_token *raw_token,
+				int last_exit_code);
+int			process_heredoc_token(t_list **current_raw, t_list **clean_tokens,
+				int last_exit_code);
 
 // Expander Utils
 int			get_var_name_length(char *str);
@@ -166,9 +171,11 @@ void		free_redir(void *redir);
 int			is_empty_cmd(t_node *node);
 
 // --- PARSING: Heredoc ---
-int			preprocess_heredocs(t_node *node, t_list *env_l, int last_exit_code);
+int			preprocess_heredocs(t_node *node, t_list *env_l,
+				int last_exit_code);
 char		*generate_heredoc_filename(void);
-char		*expand_heredoc_line(char *line, t_list *env_l, int last_exit_code);
+char		*expand_heredoc_line(char *line, t_list *env_l,
+				int last_exit_code);
 void		heredoc_signal_handler(int sig);
 
 // --- SIGNALS & SYNTAX ---
@@ -177,7 +184,8 @@ int			print_syntax(char *token);
 int			check_syntax(t_list *tokens, t_shell *shell);
 int			redir_signal_handler(t_token *token, t_list *expanded_file);
 t_token		*get_content(t_list *node);
-int			process_redir_token(t_list **curr_raw, t_list **clean_tokens, t_list *env_l, int last_exit_code);
+int			process_redir_token(t_list **curr_raw, t_list **clean_tokens,
+				t_list *env_l, int last_exit_code);
 
 // --- ENVIRONMENT ---
 t_list		*init_env(char **envp);
