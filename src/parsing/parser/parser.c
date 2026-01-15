@@ -14,20 +14,8 @@
 
 static int		peek_token_type(t_list *tokens);
 static t_node	*parse_pipe(t_list **tokens);
-static	t_node	*parse_commands(t_list **tokens);
-
-static int	is_empty_cmd(t_node *node)
-{
-	t_cmd_node	*cmd;
-
-	if (node && node->type == NODE_CMD)
-	{
-		cmd = (t_cmd_node *)node;
-		if (cmd->args == NULL && cmd->redirs == NULL)
-			return (1);
-	}
-	return (0);
-}
+static t_node	*parse_commands(t_list **tokens);
+static t_node	*syntax_error_null(t_node *left, char *msg);
 
 t_node	*parser(t_list *tokens, t_shell *shell)
 {
@@ -53,6 +41,13 @@ t_node	*parser(t_list *tokens, t_shell *shell)
 	return (ast);
 }
 
+static t_node	*syntax_error_null(t_node *left, char *msg)
+{
+	ft_putstr_fd(msg, 2);
+	free_parser_ast(left);
+	return (NULL);
+}
+
 static t_node	*parse_pipe(t_list **tokens)
 {
 	t_node	*left;
@@ -64,16 +59,12 @@ static t_node	*parse_pipe(t_list **tokens)
 	if (peek_token_type(*tokens) == TOKEN_PIPE)
 	{
 		if (is_empty_cmd(left))
-		{
-			ft_putstr_fd("Minishell: Syntax error near unexpected token | \n", 2);
-			return (free_parser_ast(left), NULL);
-		}
+			return (syntax_error_null(left,
+					"Minishell: Syntax error near unexpected token | \n"));
 		*tokens = (*tokens)->next;
 		if (!*tokens || peek_token_type(*tokens) == TOKEN_PIPE)
-		{
-			ft_putstr_fd("minishell: Syntax error (double pipe)\n", 2);
-			return (free_parser_ast(left), NULL);
-		}
+			return (syntax_error_null(left,
+					"minishell: Syntax error (double pipe)\n"));
 		right = parse_pipe(tokens);
 		if (!right)
 			return (free_parser_ast(left), NULL);

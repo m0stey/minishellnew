@@ -162,6 +162,7 @@ int			add_words_to_args(t_cmd_node *cmd, t_token *token);
 int			handle_redirection(t_list **tokens, t_cmd_node *cmd);
 void		free_parser_ast(t_node *node);
 void		free_redir(void *redir);
+int			is_empty_cmd(t_node *node);
 
 // --- PARSING: Heredoc ---
 int			preprocess_heredocs(t_node *node, t_list *env_l, int last_exit_code);

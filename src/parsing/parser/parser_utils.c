@@ -40,36 +40,26 @@ int	add_words_to_args(t_cmd_node *cmd, t_token *token)
 	return (1);
 }
 
-static char	**allocate_new_array(char **old_args, int *count)
-{
-	int		i;
-	char	**new_args;
-
-	i = 0;
-	if (old_args)
-		while (old_args[i])
-			i++;
-	*count = i;
-	new_args = malloc(sizeof(char *) * (i + 2));
-	return (new_args);
-}
-
 static char	**realloc_args_array(char **old_args, char *new_word)
 {
 	int		i;
 	char	**new_args;
 
-	new_args = allocate_new_array(old_args, &i);
+	i = 0;
+	while (old_args && old_args[i])
+		i++;
+	new_args = malloc(sizeof(char *) * (i + 2));
 	if (!new_args)
 		return (NULL);
-	if (old_args)
-		ft_memcpy(new_args, old_args, sizeof(char *) * i);
+	i = 0;
+	while (old_args && old_args[i])
+	{
+		new_args[i] = old_args[i];
+		i++;
+	}
 	new_args[i] = ft_strdup(new_word);
 	if (!new_args[i])
-	{
-		free(new_args);
-		return (NULL);
-	}
+		return (free(new_args), NULL);
 	new_args[i + 1] = NULL;
 	return (new_args);
 }
@@ -85,4 +75,17 @@ t_pipe_node	*init_pipe_node(t_node *left, t_node *right)
 	pipe->left = left;
 	pipe->right = right;
 	return (pipe);
+}
+
+int	is_empty_cmd(t_node *node)
+{
+	t_cmd_node	*cmd;
+
+	if (node && node->type == NODE_CMD)
+	{
+		cmd = (t_cmd_node *)node;
+		if (cmd->args == NULL && cmd->redirs == NULL)
+			return (1);
+	}
+	return (0);
 }
