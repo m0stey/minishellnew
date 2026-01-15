@@ -74,3 +74,24 @@ char	*expand_heredoc_line(char *line, t_list *env_l, int last_exit_code)
 	}
 	return (result);
 }
+
+int	process_heredoc_token(t_list **current_raw,
+	t_list **clean_tokens, int last_exit_code)
+{
+	t_list	*current;
+
+	current = *current_raw;
+	if (!clone_token(clean_tokens, (t_token *)current->content))
+		return (0);
+	current = current->next;
+	if (!current)
+	{
+		*current_raw = NULL;
+		return (1);
+	}
+	if (!handle_heredoc(clean_tokens,
+			(t_token *)current->content, last_exit_code))
+		return (0);
+	*current_raw = current->next;
+	return (1);
+}

@@ -143,10 +143,11 @@ int			process_tkn(t_list **current_raw, t_list **clean_tokens, t_list *env_l, in
 int			word_expander(t_list **clean_tokens, char *raw_value, t_list *env_l, int last_exit_code);
 int			clone_token(t_list **clean_tokens, t_token *raw_token);
 int			handle_heredoc(t_list **clean_tokens, t_token *raw_token, int last_exit_code);
+int			process_heredoc_token(t_list **current_raw, t_list **clean_tokens, int last_exit_code);
 
 // Expander Utils
 int			get_var_name_length(char *str);
-t_list		*build_chunks(char *raw_val, t_list *env_l, int *unquoted, int expand, int last_exit_code);
+t_list		*build_chunks(t_expd *data, int *unquoted);
 char		*join_string_chunks(t_list *chunk_list);
 int			process_chunks(t_expd *data);
 int			add_split_tokens(t_list **clean_tokens, char **split_words);
