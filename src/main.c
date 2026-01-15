@@ -29,17 +29,10 @@ static char	*get_user_input(void)
 	return (tmp);
 }
 
-static void	execute_and_cleanup(t_node *ast, t_shell *shell)
-{
-	if (preprocess_heredocs(ast, shell->env_list, shell->exit_code))
-		execute_ast(ast, shell);
-	free_parser_ast(ast);
-}
-
 static void	process_line(char *line, t_shell *shell)
 {
 	t_list	*tokens;
-	t_list	*clean_tokens;
+	t_list	*clean;
 	t_node	*ast;
 
 	tokens = lexer(line);
@@ -51,17 +44,29 @@ static void	process_line(char *line, t_shell *shell)
 		free_token_list(&tokens);
 		return ;
 	}
-	clean_tokens = expander(tokens, shell->env_list, shell->exit_code);
-	if (!clean_tokens)
+	clean = expander(tokens, shell->env_list, shell->exit_code);
+	if (!clean)
+		return ((void)(shell->exit_code = 0));
+	ast = parser(clean, shell);
+	free_token_list(&clean);
+	if (ast && preprocess_heredocs(ast, shell->env_list, shell->exit_code))
+		execute_ast(ast, shell);
+	free_parser_ast(ast);
+}
+
+static char	*handle_input(t_shell *shell)
+{
+	char	*line;
+
+	signal(SIGINT, handle_sigint_interactive);
+	signal(SIGQUIT, SIG_IGN);
+	line = get_user_input();
+	if (g_signal != 0)
 	{
-		shell->exit_code = 0;
-		return ;
+		shell->exit_code = 128 + g_signal;
+		g_signal = 0;
 	}
-	ast = parser(clean_tokens, shell);
-	free_token_list(&clean_tokens);
-	if (!ast)
-		return ;
-	execute_and_cleanup(ast, shell);
+	return (line);
 }
 
 static void	shell_loop(t_shell *shell)
@@ -70,14 +75,7 @@ static void	shell_loop(t_shell *shell)
 
 	while (1)
 	{
-		signal(SIGINT, handle_sigint_interactive);
-		signal(SIGQUIT, SIG_IGN);
-		line = get_user_input();
-		if (g_signal != 0)
-		{
-			shell->exit_code = 128 + g_signal;
-			g_signal = 0;
-		}
+		line = handle_input(shell);
 		if (!line)
 		{
 			if (isatty(STDIN_FILENO))
