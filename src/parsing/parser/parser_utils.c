@@ -40,32 +40,36 @@ int	add_words_to_args(t_cmd_node *cmd, t_token *token)
 	return (1);
 }
 
-static char	**realloc_args_array(char **old_args, char *new_word)
+static char	**allocate_new_array(char **old_args, int *count)
 {
 	int		i;
 	char	**new_args;
-	char	*word_copy;
 
 	i = 0;
 	if (old_args)
 		while (old_args[i])
 			i++;
+	*count = i;
 	new_args = malloc(sizeof(char *) * (i + 2));
+	return (new_args);
+}
+
+static char	**realloc_args_array(char **old_args, char *new_word)
+{
+	int		i;
+	char	**new_args;
+
+	new_args = allocate_new_array(old_args, &i);
 	if (!new_args)
 		return (NULL);
-	i = 0;
 	if (old_args)
+		ft_memcpy(new_args, old_args, sizeof(char *) * i);
+	new_args[i] = ft_strdup(new_word);
+	if (!new_args[i])
 	{
-		while (old_args[i])
-		{
-			new_args[i] = old_args[i];
-			i++;
-		}
+		free(new_args);
+		return (NULL);
 	}
-	word_copy = ft_strdup(new_word);
-	if (!word_copy)
-		return (free(new_args), NULL);
-	new_args[i] = word_copy;
 	new_args[i + 1] = NULL;
 	return (new_args);
 }
