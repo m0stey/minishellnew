@@ -135,7 +135,6 @@ int			is_whitespace(char c);
 int			is_operator(char c);
 int			add_token(t_list **tokens, char *value, int type);
 void		free_token_list(t_list **tokens);
-void		print_token_list(t_list *tokens);
 
 // --- PARSING: Expander ---
 t_list		*expander(t_list *raw_tokens, t_list *env_list,
@@ -154,7 +153,6 @@ int			process_heredoc_token(t_list **current_raw, t_list **clean_tokens,
 int			get_var_name_length(char *str);
 t_list		*build_chunks(t_expd *data, int *unquoted);
 char		*join_string_chunks(t_list *chunk_list);
-int			process_chunks(t_expd *data);
 int			add_split_tokens(t_list **clean_tokens, char **split_words);
 int			add_new_chunk(t_list **chunk_list, char *content);
 int			process_char_in_chunks(t_expd *data);

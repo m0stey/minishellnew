@@ -12,22 +12,6 @@
 
 #include "minishell.h"
 
-// static int	is_n_flag(char *arg)
-// {
-// 	int	i;
-
-// 	if (!arg || ft_strncmp(arg, "-n", 2) != 0)
-// 		return (0);
-// 	i = 1;
-// 	while (arg[i])
-// 	{
-// 		if (arg[i] != 'n')
-// 			return (0);
-// 		i++;
-// 	}
-// 	return (1);
-// }
-
 void	builtin_echo(char **args, t_shell *shell)
 {
 	int	i;

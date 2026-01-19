@@ -37,12 +37,6 @@ void	free_env_node(void *content)
 	free(content);
 }
 
-// // Frees the entire environment linked list and its contents.
-// void	free_env_list(t_list **env_list)
-// {
-// 	ft_lstclear(env_list, free_env_node);
-// }
-
 // Creates a new node with the given content
 // and appends it to the end of the environment list.
 void	ft_setenv_add_new(t_list **env_list, char *new_content)
